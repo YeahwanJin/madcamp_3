@@ -1,26 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import ProfileShowOff from './ProfileShowOff';
 import ProfileEditDialog from './dialogs/ProfileEditDialog';
 import UploadDialog from './dialogs/UploadDialog';
 import FriendListDialog from './dialogs/FriendListDialog';
 
-function ProfileHeader({ user }) {
+function ProfileHeader({id}) {
+  const [user, setUser] = useState(null);
   const [showShowOffModal, setShowShowOffModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showFriendListModal, setShowFriendListModal] = useState(false);
 
+  // 사용자 프로필 정보를 불러오는 함수
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`http://172.10.7.49:5000/api/users/${id}`);
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  // 컴포넌트 마운트 시 사용자 정보 불러오기
+  useEffect(() => {
+    console.log('Fetching profile for ID:', id);
+    fetchProfile();
+  }, [id]);
+
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center">
         <img
-          src={user.profileImage || 'https://via.placeholder.com/150'}
-          alt={user.name}
+          src={user?.profile_image || 'https://via.placeholder.com/150'}
+          alt={user?.name || 'Default Name'}
           className="w-24 h-24 rounded-full mr-4"
         />
         <div>
-          <h2 className="text-2xl font-bold">{user.name}</h2>
-          <p className="text-gray-500">{user.intro}</p>
+          <h2 className="text-2xl font-bold">{user?.name || 'Loading...'}</h2>
+          <p className="text-gray-500">{user?.bio || 'No introduction provided.'}</p>
         </div>
       </div>
 

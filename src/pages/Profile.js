@@ -8,7 +8,7 @@ function Profile({ currentUser }) {
   if (!currentUser) {
     return <p>로그인되지 않았습니다. 로그인해주세요.</p>;
   }
-
+  
   const { username, profileInfo } = currentUser;
 
   // 기본값 설정
@@ -30,14 +30,7 @@ function Profile({ currentUser }) {
 
       {/* 메인 콘텐츠 */}
       <div className="w-3/4 bg-white p-6 rounded-lg shadow-md">
-        <ProfileHeader
-          user={{
-            name: username,
-            intro: profileInfo?.intro || 'No introduction provided',
-            profileImage: profileInfo?.profileImage,
-          }}
-        />
-
+        <ProfileHeader id={currentUser.id} />
         {/* 이미지 그리드 */}
         <ProfileImageGrid images={images} />
       </div>
